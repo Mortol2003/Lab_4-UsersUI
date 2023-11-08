@@ -7,7 +7,9 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Switch
 import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
@@ -19,6 +21,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.topic2.android.notes.theme.JetNotesTheme
 import com.topic2.android.notes.theme.JetNotesThemeSettings
+import com.topic2.android.notes.routing.Screen
+import com.topic2.android.notes.routing.NotesRouter
 
 @Composable
 private fun AppDrawerHeader(){
@@ -135,5 +139,53 @@ private fun LightDarkThemeItem(){
                 .padding(start = 8.dp, end = 8.dp)
                 .align(alignment = Alignment.CenterVertically)
         )
+    }
+}
+@Composable
+private fun LightDarkThemeItemPreview(){
+    JetNotesTheme {
+        LightDarkThemeItem()
+    }
+}
+
+@Composable
+fun AppDrawer(
+    currentScreen: Screen,
+    closeDrawerAction: () ->Unit
+) {
+    Column(modifier = Modifier.fillMaxSize()) {
+        AppDrawerHeader()
+
+        Divider(color = MaterialTheme.colors.onSurface.copy(alpha = .2f))
+
+        ScreenNavigationButton(
+            icon = Icons.Filled.Home,
+            label = "Заметки",
+            isSelected = currentScreen == Screen.Notes,
+            onClick = {
+                NotesRouter.navigateTo(Screen.Notes)
+                closeDrawerAction()
+            }
+        )
+        ScreenNavigationButton(
+            icon = Icons.Filled.Delete,
+            label = "Корзина",
+            isSelected = currentScreen == Screen.Trash,
+            onClick = {
+                NotesRouter.navigateTo(Screen.Trash)
+                closeDrawerAction
+            }
+        )
+        LightDarkThemeItem()
+    }
+}
+
+@Preview
+@Composable
+fun AppDrawerPreview(){
+    JetNotesTheme {
+        AppDrawer(Screen.Notes){
+
+        }
     }
 }
